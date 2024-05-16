@@ -1,31 +1,19 @@
-import style from './stylejs/AppStyle';
-import './css/App.css';
-import { ButtonBlue, ButtonRed } from './StyledComponents/StyledComponent';
+import { Button, Container, TextField, Box } from "@mui/material"
 
 function App() {
   return (
     <>
-      <div className='backgroundColorGray'>
-        <div style={style.main}>
-          <div style={style.innerDiv}>
-            <h1 style={style.header} id='fontColorRed'>Login</h1>
-            <form action="#" style={{ padding: 10 }}>
-              <div style={style.formDiv}>
-                <input type="text" placeholder="Email" style={style.input} />
-              </div>
-              <div style={style.formDiv}>
-                <input type="password" placeholder="Password" style={style.input} />
-              </div>
-              <div style={style.formDiv}>
-                <ButtonBlue>Login</ButtonBlue>
-              </div>
-              <div style={style.formDiv}>
-                <ButtonRed>Signup</ButtonRed>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      <Container maxWidth="md">
+        <Box>
+          <TextField size="small" variant="outlined" placeholder="Email" label="Email" />
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <TextField type="password" size="small" variant="outlined" placeholder="Password" label="Password" />
+        </Box>
+        <Box sx={{ mt: 3 }}>
+          <Button variant="contained">Login</Button>
+        </Box>
+      </Container>
     </>
   )
 }
