@@ -3,10 +3,10 @@ import LoginIcon from "@mui/icons-material/Login";
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-
+import { Link } from "react-router-dom";
 import { useState } from "react";
 
-export default function LoginPage() {
+export default function SignUpPage() {
     const [isError, setIsError] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
@@ -18,7 +18,7 @@ export default function LoginPage() {
         <>
             <Box sx={{ alignContent: 'center', height: '100vh' }}>
                 <Container maxWidth="xs" component={Paper} sx={{ p: 3 }}>
-                    <Typography variant="h5" sx={{ p: 1 }}>Demo Project</Typography>
+                    <Typography variant="h5" sx={{ p: 1 }}>Sign Up</Typography>
                     <Box sx={{ p: 1 }}>
                         <TextField error={isError} helperText={isError ? "Invalid Email" : ""} fullWidth label="Email" variant="outlined" />
                     </Box>
@@ -40,11 +40,32 @@ export default function LoginPage() {
                         />
                     </Box>
                     <Box sx={{ p: 1 }}>
-                        <Button size="large" fullWidth onClick={validate} variant="contained" endIcon={<LoginIcon />}>Login</Button>
+                        <TextField
+                            type={showPassword ? "text" : "password"}
+                            error={isError}
+                            helperText={isError ? "Invalid Password" : ""}
+                            fullWidth
+                            label="Re-type Password"
+                            variant="outlined"
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ p: 1 }}>
+
+                        <Button size="large" fullWidth variant="contained" endIcon={<PersonAddAltRoundedIcon />}>Sign up</Button>
+
                     </Box>
                     <Typography align="center">or</Typography>
                     <Box sx={{ p: 1 }}>
-                        <Button size="large" fullWidth variant="contained" endIcon={<PersonAddAltRoundedIcon />}>Sign up</Button>
+                        <Link to="/">
+                            <Button size="large" fullWidth variant="contained" endIcon={<LoginIcon />}>Login</Button>
+                        </Link>
                     </Box>
                 </Container>
             </Box>
