@@ -18,6 +18,12 @@ export default function LoginPage() {
 
     const login = async () => {
 
+        if(email === "" || password === ""){
+            setIsError(true);
+            setErroMessage("Please fill in the fields");
+            return
+        }
+
         let { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password

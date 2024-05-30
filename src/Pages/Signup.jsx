@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { DatePicker } from "@mui/x-date-pickers";
 import supabase from "../Services/Supabase";
-
+import { LoadingButton } from "@mui/lab";
 export default function SignUpPage() {
     const [user, setUser] = useState({
         email: "",
@@ -28,6 +28,7 @@ export default function SignUpPage() {
     const [showRePassword, setShowRePassword] = useState(false);
     const [isError, setIsError] = useState(false);
     const [errorMessage, setErrorMessage] = useState("Something wen't wrong!");
+    const [loading, setLoading] = useState(false);
 
     const setUserDetails = (key, value) => {
         setIsError(false);
@@ -35,6 +36,7 @@ export default function SignUpPage() {
         const oldDetails = user;
         oldDetails[key] = value;
         setUser({ ...oldDetails });
+        console.log(user);
     }
 
     const setProfileDetails = (key, value) => {
@@ -43,55 +45,54 @@ export default function SignUpPage() {
         const oldDetails = profile;
         oldDetails[key] = value;
         setProfile({ ...oldDetails });
+        console.log(profile);
     }
 
     const validate = (obj) => {
         let status = false;
+        let msg = "";
         for (const [key, value] of Object.entries(obj)) {
             console.log({ key, value });
             if (value === "") {
                 status = true;
+                msg = "Please fill in all inputs";
                 break;
             }
+
+            if (key === "contact_no" && value.length < 11) {
+                msg = "Please use 11 digit for contact number";
+                status = true;
+            }
         }
-        return status;
+        return { status, msg };
     }
     const signUp = async () => {
+        try {
+            setLoading(true);
+            let resultUser = validate(user);
+            if (resultUser.status) {
+                setIsError(true);
+                setErrorMessage(resultUser.msg)
+                return
+            }
 
-        if (validate(user)) {
-            setIsError(true);
-            setErrorMessage("Please fill in all fields")
-            return
-        }
+            let resultProfile = validate(profile);
+            if (resultProfile.status) {
+                setIsError(true);
+                setErrorMessage(resultProfile.msg)
+                return
+            }
 
-        if (validate(profile)) {
-            setIsError(true);
-            setErrorMessage("Please fill in all fields")
-            return
-        }
+            if (user.password !== user.repassword) {
+                setIsError(true);
+                setErrorMessage("Password doesn't match")
+                return
+            }
 
-        if (user.password !== user.repassword) {
-            setIsError(true);
-            setErrorMessage("Password doesn't match")
-            return
-        }
-
-        let { data, error } = await supabase.auth.signUp({
-            email: user.email,
-            password: user.password
-        })
-
-        if (error != null) {
-            setIsError(true);
-            setErrorMessage(error.message);
-            return
-        }
-
-        if (data != null) {
-            const { data, error } = await supabase
-                .from('profiles')
-                .insert([profile])
-                .select()
+            let { data, error } = await supabase.auth.signUp({
+                email: user.email,
+                password: user.password
+            })
 
             if (error != null) {
                 setIsError(true);
@@ -100,8 +101,26 @@ export default function SignUpPage() {
             }
 
             if (data != null) {
-                alert("Successfully created profile!")
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .insert([profile])
+                    .select()
+
+                if (error != null) {
+                    setIsError(true);
+                    setErrorMessage(error.message);
+                    return
+                }
+
+                if (data != null) {
+                    alert("Successfully created profile!")
+                }
             }
+
+        } catch (e) {
+            console.debug(e);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -180,9 +199,7 @@ export default function SignUpPage() {
                         <TextField maxRows={3} multiline rows={3} fullWidth label="Address" value={profile.address} variant="outlined" onChange={(e) => setProfileDetails("address", e.target.value)} />
                     </Box>
                     <Box sx={{ p: 1 }}>
-
-                        <Button onClick={signUp} size="large" fullWidth variant="contained" endIcon={<PersonAddAltRoundedIcon />}>Sign up</Button>
-
+                        <LoadingButton loading={loading} onClick={signUp} sx={{ p: 1 }} fullWidth variant="contained" endIcon={<PersonAddAltRoundedIcon />}>Sign up</LoadingButton>
                     </Box>
                     <Typography align="center">or</Typography>
                     <Box sx={{ p: 1 }}>
