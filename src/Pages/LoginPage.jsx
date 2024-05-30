@@ -46,12 +46,13 @@ export default function LoginPage() {
                         </Box>
                     }
                     <Box sx={{ p: 1 }}>
-                        <TextField fullWidth label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
+                        <TextField type="email" fullWidth label="Email" variant="outlined" onChange={(e) => setEmail(e.target.value)} />
                     </Box>
                     <Box sx={{ p: 1 }}>
                         <TextField
                             onChange={(e) => setPassword(e.target.value)}
                             type={showPassword ? "text" : "password"}
+                            required
                             fullWidth
                             label="Password"
                             variant="outlined"

@@ -20,7 +20,7 @@ export const mainListItems = (
                 <ListItemText primary="Dashboard" />
             </ListItemButton>
         </Link>
-        <Link to="/dashboard/users/1" style={styles}>
+        <Link to="/dashboard/users" style={styles}>
             <ListItemButton>
                 <ListItemIcon>
                     <PeopleIcon />
